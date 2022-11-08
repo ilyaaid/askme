@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="question-card">
+    <div class="row">
+        <div class="col-2">
+            <img class="question-avatar" src="{% static "img/user"|add:question.avatar|add:".jpg" %}" alt="avatar"
+                 width="80px"
+                 height="80px">
+            {% with question.likes as likes_cnt %}
+                {% include "inc/likes.html" %}
+            {% endwith %}
+        </div>
+        <div class="col-10">
+            <h2 class="question-title"><a href="{% url 'question' question_id=question.id %}">{{ question.title }}</a>
+            </h2>
+            <p class="question-text">{{ question.text }}
+            </p>
+            <div class="row">
+                <div class="col-2">
+                    <a href="{% url 'question' question_id=question.id %}"
+                       class="question-answers">answer({{ question.answers_num }})</a>
+                </div>
+                <div class="col-10">
+                    <div class="question-tags">Tags:
+                        <div class="question-tags-list">
+
+                            {% for tag in question.tags %}
+                                <a href="{% url 'tag' tag_name=tag %}" class="question-tag">{{ tag }}</a>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

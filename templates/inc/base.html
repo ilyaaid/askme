@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="ru" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <title>Askme</title>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    {% block styles_links %} {% endblock %}
+</head>
+
+<body class="d-flex flex-column h-100">
+
+<header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand logo" href="{% url 'index' %}">
+                <img src="{% static 'img/logo.png' %}" alt="logo" height="60px" width="100px">
+                <span>Q&A</span>
+            </a>
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" id="navbarCollapse" style="">
+
+                <a class="ask-btn btn btn-success me-auto" href="{% url 'ask' %}">Ask Question</a>
+                <form class="d-flex me-3 search-form" role="search">
+                    <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
+                </form>
+
+                <div class="user">
+                    <div class="new-user d-none">
+                        <a href="{% url 'login' %}" class="login btn btn-link">Log in</a>
+                        <a href="{% url 'signup' %}" class="signup btn btn-success">Sign Up</a>
+                    </div>
+                    <div class="existing-user">
+                        <a href="{% url 'settings' %}" class="navbar-brand header-user-settings-link">
+                            <img src="{% static "img/user1.jpg" %}" alt="avatar" class="header-user-avatar" width="50px"
+                                 height="50px">
+                        </a>
+                        <div>
+                            <span class="d-block header-user-name">Dr. Pepper</span>
+                            <a href="#" class="header-user-logout-link btn btn-link">Log out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Begin page content -->
+<main class="main-block flex-shrink-0">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-8">
+                {% block content %}
+                {% endblock %}
+            </div>
+
+            <div class="col-4">
+                <div class="sidebar">
+                    <div class="tags-section">
+                        <h1>Popular tags</h1>
+                        <div class="tags-list">
+                            <a href="#" class="tag">django</a>
+                            <a href="#" class="tag">python</a>
+                            <a href="#" class="tag">c++</a>
+                            <a href="#" class="tag">perl</a>
+                            <a href="#" class="tag">nginx</a>
+                            <a href="#" class="tag">javascript</a>
+                            <a href="#" class="tag">java</a>
+                            <a href="#" class="tag">python</a>
+                            <a href="#" class="tag">scheme</a>
+                            <a href="#" class="tag">go</a>
+                            <a href="#" class="tag">nginx</a>
+                            <a href="#" class="tag">javascript</a>
+                            <a href="#" class="tag">django</a>
+                            <a href="#" class="tag">python</a>
+                            <a href="#" class="tag">c++</a>
+                            <a href="#" class="tag">perl</a>
+                            <a href="#" class="tag">nginx</a>
+                            <a href="#" class="tag">javascript</a>
+                        </div>
+                    </div>
+                    <div class="members-section">
+                        <h1>Best members</h1>
+                        <div class="members-list row">
+                            <div class="col-6">
+                                <a href="#" class="member">Antelope</a>
+                                <a href="#" class="member">Badger</a>
+                                <a href="#" class="member">Bear</a>
+                                <a href="#" class="member">Bison</a>
+                            </div>
+                            <div class="col-6">
+                                <a href="#" class="member">Crocodile</a>
+                                <a href="#" class="member">Chimpanzee</a>
+                                <a href="#" class="member">Bull</a>
+                                <a href="#" class="member">Elephant</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <span class="text-muted">Место для контента прикрепленного футера здесь.</span>
+    </div>
+</footer>
+
+<script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+</body>
+</html>

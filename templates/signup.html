@@ -1,0 +1,48 @@
+{% extends "inc/base.html" %}
+
+{% block content %}
+
+
+<div class="sign-up">
+    <h1>Registration</h1>
+    <form action="#" method="POST">
+        <div class="warnings mb-2">
+            Email address already registered!
+        </div>
+        <div class="mb-3">
+            <label for="login" class="form-label">Login</label>
+            <input type="text" class="form-control" id="login" value="dr_pepper" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control invalid-input" id="email" value="dr.pepper@mail.ru"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" value="Dr.Pepper" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password2" class="form-label">Repeat password</label>
+            <input type="password" class="form-control" id="password2" required>
+        </div>
+
+        <div class="mb-5">
+            <label for="avatar" class="form-label">Upload Avatar</label>
+            <input type="file" class="form-control" id="avatar">
+        </div>
+
+        <button type="submit" class="btn btn-success">Sign Up</button>
+    </form>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,43 @@
+{% extends "inc/base.html" %}
+
+{% load static %}
+
+{% block styles_links %}
+    <link rel="stylesheet" href="{% static "css/question.css" %}">
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="question">
+        <div class="row">
+            <div class="col-3">
+                <img class="question-avatar" src="{% static "img/user1.jpg" %}" alt="avatar" width="120px"
+                     height="120px">
+                {% with question.likes as likes_cnt %}
+                    {% include "inc/likes.html" %}
+                {% endwith %}
+            </div>
+            <div class="col-9">
+                <h2 class="question-title">{{ question.title }}</h2>
+                <p class="question-text">{{ question.text }}
+                </p>
+                <div class="question-tags">Tags:
+                    <div class="question-tags-list">
+                        {% for tag in question.tags %}
+                            <a href="{% url 'tag' tag_name=tag %}" class="question-tag">{{ tag }}</a>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for answer in page_obj %}
+        {% include "inc/answer.html" %}
+    {% endfor %}
+
+    {% include "inc/paginator.html" %}
+
+{% endblock %}

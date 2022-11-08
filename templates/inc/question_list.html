@@ -1,0 +1,18 @@
+{% extends "inc/base.html" %}
+
+{% block content %}
+
+    <div class="questions">
+        {% block title_question_list %} {% endblock %}
+
+        {% for question in page_obj %}
+            {% include "inc/question_item.html" %}
+
+        {% endfor %}
+
+
+        {% include "inc/paginator.html" %}
+
+    </div>
+
+{% endblock %}

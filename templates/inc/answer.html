@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="answer {% if answer.is_right %} correct-answer {% endif %}">
+    <div class="row">
+        <div class="col-3">
+            <img class="question-avatar" src="{% static "img/user"|add:answer.avatar|add:".jpg" %}" alt="avatar"
+                 width="80px"
+                 height="80px">
+            {% with answer.likes as likes_cnt %}
+                {% include "inc/likes.html" %}
+            {% endwith %}
+        </div>
+        <div class="col-9">
+            <p class="answer-text">
+                {{ answer.text }}
+            </p>
+            <div class="answer-mark">
+                <input type="checkbox" {% if answer.is_right %} checked {% endif %}>
+                Correct!
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,26 @@
+{% extends "inc/base.html" %}
+
+{% block content %}
+
+<div class="log-in">
+    <h1 class="mb-3">Log In</h1>
+    <form action="#" method="POST" class="question-creation mb-3">
+        <div class="warnings mb-2">
+            Invalid <span>password</span>
+        </div>
+        <div class="mb-3">
+            <label for="login" class="form-label">Login</label>
+            <input type="text" class="form-control" id="login" value="dr_pepper" required>
+        </div>
+
+        <div class="mb-5">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control invalid-input" id="password" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Log In</button>
+    </form>
+    <a href="../templates/signup.html">Create a new account</a>
+</div>
+
+{% endblock %}
