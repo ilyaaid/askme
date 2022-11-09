@@ -6,7 +6,7 @@ QUESTIONS = [
     {
         'id': i,
         'avatar': str(i % 3 + 1),
-        'title': 'title' + str(i),
+        'title': 'title' + str(i + 1),
         'text': 'question' * 10,
         'answers_num': i + 1,
         'likes': (i + 10) % 6,
