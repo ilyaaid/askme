@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from app import models
+from app.models import Question, Answer, Tag, AnswerLike, QuestionLike
 from django.http import HttpResponse, HttpResponseNotFound
 from django.core.paginator import Paginator
+
 
 
 def paginate(objects_list, request, per_page=10):
@@ -12,36 +13,43 @@ def paginate(objects_list, request, per_page=10):
 
 
 def index(request):
+    questions = Question.objects.get_new_questions()
     context = {
-        'questions': models.QUESTIONS,
-        'page_obj': paginate(models.QUESTIONS, request),
+        'questions': questions,
+        'page_obj': paginate(questions, request),
     }
     return render(request, 'index.html', context=context)
 
 
 def hot(request):
+    questions = Question.objects.get_hot_questions()
     context = {
-        'questions': models.QUESTIONS,
-        'page_obj': paginate(models.QUESTIONS, request),
+        'questions': questions,
+        'page_obj': paginate(questions, request),
     }
     return render(request, 'hot.html', context=context)
 
 
 def tag(request, tag_name):
+    questions = Question.objects.get_questions_by_tag(tag_name)
     context = {
-        'questions': models.QUESTIONS,
-        'page_obj': paginate(models.QUESTIONS, request),
-        'tag_name': tag_name,
+        'questions': questions,
+        'page_obj': paginate(questions, request),
+        'tag': tag_name,
     }
     return render(request, 'tag.html', context=context)
 
 
 def question(request, question_id: int):
-    if question_id >= len(models.QUESTIONS):
+    try:
+        q = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        q = None
         return HttpResponseNotFound()
+
     context = {
-        'question': models.QUESTIONS[question_id],
-        'page_obj': paginate(models.QUESTIONS[question_id]['answers'], request),
+        'question': q,
+        'page_obj': paginate(q.answers.all(), request),
     }
     return render(request, 'question.html', context=context)
 
@@ -60,6 +68,3 @@ def settings(request):
 
 def ask(request):
     return render(request, 'ask.html')
-
-
-

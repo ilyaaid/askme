@@ -4,7 +4,7 @@
 <div class="question-likes">
     <button><img src="{% static "img/like.png" %}" alt="like" width="25px"
                  height="25px"></button>
-    <div class="question-rating">{{ likes_cnt }}</div>
+    <div class="question-rating">{{ likes.count }}</div>
     <button><img src="{% static "img/dislike.png" %}" alt="dislike" width="25px"
                  height="25px"></button>
 </div>

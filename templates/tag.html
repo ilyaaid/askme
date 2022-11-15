@@ -1,7 +1,7 @@
 {% extends "inc/question_list.html" %}
 
 {% block title_question_list %}
-    <h1>Tag: {{ tag_name }}
+    <h1>Tag: {{ tag }}
         <a href="{% url 'index' %}">New questions</a>
         <a href="{% url 'hot' %}">Popular questions</a>
     </h1>

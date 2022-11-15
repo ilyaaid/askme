@@ -3,10 +3,10 @@
 <div class="answer {% if answer.is_right %} correct-answer {% endif %}">
     <div class="row">
         <div class="col-3">
-            <img class="question-avatar" src="{% static "img/user"|add:answer.avatar|add:".jpg" %}" alt="avatar"
+            <img class="question-avatar" src="{{ answer.user.avatar.url }}" alt="avatar"
                  width="80px"
                  height="80px">
-            {% with answer.likes as likes_cnt %}
+            {% with answer.likes as likes %}
                 {% include "inc/likes.html" %}
             {% endwith %}
         </div>

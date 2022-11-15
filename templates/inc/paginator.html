@@ -4,6 +4,11 @@
     <ul class="pagination">
         {% if page_obj.has_previous %}
             <li class="page-item">
+                <a class="page-link" href="{{ request.path }}?page=1" aria-label="Next">
+                    <span aria-hidden="true">1</span>
+                </a>
+            </li>
+            <li class="page-item">
                 <a class="page-link" href="{{ request.path }}?page={{ page_obj.previous_page_number }}"
                    aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
@@ -21,6 +26,11 @@
             <li class="page-item">
                 <a class="page-link" href="{{ request.path }}?page={{ page_obj.next_page_number }}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="{{ request.path }}?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                    <span aria-hidden="true">{{ page_obj.paginator.num_pages }}</span>
                 </a>
             </li>
         {% endif %}
