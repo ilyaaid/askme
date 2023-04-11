@@ -48,64 +48,89 @@ def fill_users(num):
 def fill_tags(num):
     tags_list = []
     used_tags = []
-    for i in range(num):
+    i = 0
+    while i < num:
         tag = generate_string(i % 7 + 3)
         if tag in used_tags:
             i -= 1
             continue
         used_tags.append(tag)
         tags_list.append(Tag(name=tag))
+        i += 1
 
     Tag.objects.bulk_create(tags_list)
 
 
 def fill_questions(num):
     questions_list = []
+    tags_count = len(Tag.objects.all())
+    profiles_count = len(Profile.objects.all())
+    text = generate_text(300)
+    title = generate_string(30)
     for user in Profile.objects.all():
-        for j in range(int(num / len(Profile.objects.all()))):
+        for j in range(int(num / profiles_count)):
             question = Question(user=user,
-                                title=generate_string(30),
-                                text=generate_text(300),)
+                                title=str(len(questions_list)) + title,
+                                text=text, )
             questions_list.append(question)
 
     Question.objects.bulk_create(questions_list)
 
     for question in questions_list:
-        tags_list = list(Tag.objects.all())
-        left_ind = random.randint(0, len(tags_list) - 1)
-        for i in range(left_ind, min(len(tags_list), left_ind + random.randint(1, 5))):
-            question.tags.add(tags_list[i])
+        tags_left_ind = random.randint(0, tags_count - 1)
+        question.tags.set(Tag.objects.all()[tags_left_ind: min(tags_count, tags_left_ind + 3)])
 
 
 def fill_answers(num):
     answers_list = []
-    user_list = list(Profile.objects.all())
-    for question in Question.objects.all():
-        for j in range(int(num / len(Question.objects.all()))):
-            answer = Answer(user=user_list[random.randint(0, len(user_list) - 1)],
-                            question=question,
-                            text=generate_text(200),)
-            answers_list.append(answer)
+    text = generate_text(200)
+    for user in Profile.objects.all():
+        for question in Question.objects.all():
+            answers_list.append(
+                Answer(user=user,
+                       question=question,
+                       text=text,
+                       is_right=False))
+            num -= 1
+            if num <= 0:
+                break
+        if num <= 0:
+            break
 
     Answer.objects.bulk_create(answers_list)
 
 
 def fill_likes(num):
+    i = num
     answers_like_list = []
-    user_list = list(Profile.objects.all())
-    for answer in Answer.objects.all():
-        left_ind = random.randint(0, len(user_list) - 1)
-        for i in range(left_ind, min(len(user_list), left_ind + random.randint(0, 2))):
-            answers_like_list.append(AnswerLike(user=user_list[i], answer=answer))
-
-    questions_like_list = []
-    user_list = list(Profile.objects.all())
-    for question in Question.objects.all():
-        left_ind = random.randint(0, len(user_list) - 1)
-        for i in range(left_ind, min(len(user_list), left_ind + random.randint(0, 3))):
-            questions_like_list.append(QuestionLike(user=user_list[i], question=question))
+    for user in Profile.objects.all():
+        for answer in Answer.objects.all():
+            answers_like_list.append(AnswerLike(user=user, answer=answer))
+            i -= 1
+            if i <= 0:
+                break
+            if len(answers_like_list) == 100000:
+                AnswerLike.objects.bulk_create(answers_like_list)
+                answers_like_list = []
+        if i <= 0:
+            break
 
     AnswerLike.objects.bulk_create(answers_like_list)
+
+    i = num
+    questions_like_list = []
+    for user in Profile.objects.all():
+        for question in Question.objects.all():
+            questions_like_list.append(QuestionLike(user=user, question=question))
+            i -= 1
+            if i <= 0:
+                break
+            if len(questions_like_list) == 100000:
+                QuestionLike.objects.bulk_create(questions_like_list)
+                questions_like_list = []
+        if i <= 0:
+            break
+
     QuestionLike.objects.bulk_create(questions_like_list)
 
 
@@ -114,7 +139,7 @@ def fill_db_with_ratio(ratio):
     fill_tags(ratio)
     fill_questions(ratio * 10)
     fill_answers(ratio * 100)
-    fill_likes(ratio*200)
+    fill_likes(ratio * 200)
 
 
 class Command(BaseCommand):

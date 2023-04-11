@@ -4,7 +4,6 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.core.paginator import Paginator
 
 
-
 def paginate(objects_list, request, per_page=10):
     p = Paginator(objects_list, per_page)
     page_number = request.GET.get('page')
