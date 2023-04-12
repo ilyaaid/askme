@@ -43,7 +43,6 @@ def question(request, question_id: int):
     try:
         q = Question.objects.get(id=question_id)
     except Question.DoesNotExist:
-        q = None
         return HttpResponseNotFound()
 
     context = {
