@@ -1,10 +1,10 @@
 {% load static %}
-
+{% load mine %}
 
 <div class="question-likes">
     <button><img src="{% static "img/like.png" %}" alt="like" width="25px"
                  height="25px"></button>
-    <div class="question-rating">{{ likes_cnt }}</div>
+    <div class="question-rating">{{ evals|count_rating }}</div>
     <button><img src="{% static "img/dislike.png" %}" alt="dislike" width="25px"
                  height="25px"></button>
 </div>

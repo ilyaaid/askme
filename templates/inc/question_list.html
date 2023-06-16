@@ -1,15 +1,15 @@
 {% extends "inc/base.html" %}
+{% load mine %}
 
 {% block content %}
 
     <div class="questions">
         {% block title_question_list %} {% endblock %}
 
-        {% for question in page_obj %}
+        {% for question in paginator|get_page_obj:request %}
             {% include "inc/question_item.html" %}
 
         {% endfor %}
-
 
         {% include "inc/paginator.html" %}
 

@@ -6,42 +6,42 @@ from django.core.paginator import Paginator
 
 def paginate(objects_list, request, per_page=10):
     p = Paginator(objects_list, per_page)
-    page_number = request.GET.get('page')
-    page_obj = p.get_page(page_number)
-    return page_obj
+    return p
 
 
 def index(request):
+    questions = models.Question.objects.get_last()
+    print("\t---count of new questions: " + str(questions.count()))
     context = {
-        'questions': models.QUESTIONS,
-        'page_obj': paginate(models.QUESTIONS, request),
+        'paginator': paginate(questions, request),
     }
     return render(request, 'index.html', context=context)
 
 
 def hot(request):
+    questions = models.Question.objects.get_hot()
+    print("\t---count of popular questions: " + str(questions.count()))
     context = {
-        'questions': models.QUESTIONS,
-        'page_obj': paginate(models.QUESTIONS, request),
+        'paginator': paginate(questions, request),
     }
     return render(request, 'hot.html', context=context)
 
 
 def tag(request, tag_name):
+    questions = models.Question.objects.get_by_tag(tag_name)
+    print("\t---count of questions with tag " + tag_name + ": "+ str(questions.count()))
     context = {
-        'questions': models.QUESTIONS,
-        'page_obj': paginate(models.QUESTIONS, request),
+        'paginator': paginate(questions, request),
         'tag_name': tag_name,
     }
     return render(request, 'tag.html', context=context)
 
 
 def question(request, question_id: int):
-    if question_id >= len(models.QUESTIONS):
-        return HttpResponseNotFound()
+    q = models.Question.objects.get(id=question_id)
     context = {
-        'question': models.QUESTIONS[question_id],
-        'page_obj': paginate(models.QUESTIONS[question_id]['answers'], request),
+        'question': q,
+        'paginator': paginate(q.answers.all(), request),
     }
     return render(request, 'question.html', context=context)
 

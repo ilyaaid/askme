@@ -1,8 +1,16 @@
 {% load static %}
+{% load mine %}
+
+{% with page_obj=paginator|get_page_obj:request %}
 
 <nav aria-label="Page navigation example">
     <ul class="pagination">
         {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="{{ request.path }}?page=1" aria-label="Next">
+                    1
+                </a>
+            </li>
             <li class="page-item">
                 <a class="page-link" href="{{ request.path }}?page={{ page_obj.previous_page_number }}"
                    aria-label="Previous">
@@ -18,11 +26,19 @@
         </li>
 
         {% if page_obj.has_next %}
+
             <li class="page-item">
                 <a class="page-link" href="{{ request.path }}?page={{ page_obj.next_page_number }}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
+            <li class="page-item">
+                <a class="page-link" href="{{ request.path }}?page={{ paginator.num_pages }}" aria-label="Next">
+                    {{ paginator.num_pages }}
+                </a>
+            </li>
         {% endif %}
     </ul>
 </nav>
+
+{% endwith %}
