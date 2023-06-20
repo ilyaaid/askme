@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="answer {% if answer.is_right %} correct-answer {% endif %}">
+<div class="answer {% if answer.is_right %} correct-answer {% endif %}" >
     <div class="row">
         <div class="col-3">
             <img class="question-avatar" src="{{ answer.user.avatar.url }}" alt="avatar"
@@ -18,6 +18,9 @@
                 <input type="checkbox" {% if answer.is_right %} checked {% endif %}>
                 Correct!
             </div>
+        </div>
+        <div class="col-12" style="text-align: right">
+                {{ answer.date }}
         </div>
     </div>
 </div>

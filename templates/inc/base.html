@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load  %}
 
 <html lang="ru" class="h-100">
 <head>
@@ -7,6 +8,7 @@
     <title>Askme</title>
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
     {% block styles_links %} {% endblock %}
 </head>
 
@@ -14,7 +16,7 @@
 
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light p-lg-2">
         <div class="container-fluid">
             <a class="navbar-brand logo" href="{% url 'index' %}">
                 <img src="{% static 'img/logo.png' %}" alt="logo" height="60px" width="100px">
@@ -33,20 +35,24 @@
                 </form>
 
                 <div class="user">
-                    <div class="new-user d-none">
-                        <a href="{% url 'login' %}" class="login btn btn-link">Log in</a>
-                        <a href="{% url 'signup' %}" class="signup btn btn-success">Sign Up</a>
-                    </div>
-                    <div class="existing-user">
-                        <a href="{% url 'settings' %}" class="navbar-brand header-user-settings-link">
-                            <img src="{% static "img/../../uploads/avatars/user1.jpg" %}" alt="avatar" class="header-user-avatar" width="50px"
-                                 height="50px">
-                        </a>
-                        <div>
-                            <span class="d-block header-user-name">Dr. Pepper</span>
-                            <a href="#" class="header-user-logout-link btn btn-link">Log out</a>
+                    {% if request.user.is_authenticated %}
+                        <div class="existing-user">
+                            <a href="{% url 'settings' %}" class="navbar-brand header-user-settings-link">
+                                <img src="{{ request.user.avatar.url }}" alt="avatar"
+                                     class="header-user-avatar" width="50px"
+                                     height="50px">
+                            </a>
+                            <div>
+                                <span class="d-block header-user-name">{{ request.user.username }}</span>
+                                <a href="{% url 'logout' %}?next={{ request.path }}" class="header-user-logout-link">Log out</a>
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="new-user">
+                            <a href="{% url 'login' %}" class="login btn btn-link">Log in</a>
+                            <a href="{% url 'signup' %}" class="signup btn btn-success">Sign Up</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

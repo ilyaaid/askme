@@ -1,11 +1,30 @@
 from django.db import models
-
 from django.contrib.auth.models import User, AbstractUser
+from django.conf import settings
+
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from io import BytesIO
+from PIL import Image
 
 # Create your models here.
+from datetime import datetime
+
+def user_directory_path(instance, filename):
+    now = datetime.now()
+    return 'avatars/{2}/{3}/{4}/user_{0}/{1}'.format(instance.username, filename,
+                                                     now.year, now.month, now.day)
+
+def get_default_image():
+    image = Image.open(settings.MEDIA_ROOT + '/avatars/default.png')
+    bytes_io = BytesIO()
+    image.save(bytes_io, format='PNG')
+    file = InMemoryUploadedFile(bytes_io, None, 'default.png', 'image/png', bytes_io.getbuffer().nbytes, None)
+    return file
 
 class Profile(AbstractUser):
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(blank=True, null=True,
+        upload_to=user_directory_path,
+        default=get_default_image)
 
 
 class QuestionManager(models.Manager):
@@ -15,8 +34,8 @@ class QuestionManager(models.Manager):
     def get_hot(self):
         return self.get_queryset().all().annotate(
             like_count=models.Count(models.Case(models.When(evals__is_like=True, then=1)))
-                       - models.Count(models.Case(models.When(evals__is_like=False, then=1))))\
-            .order_by('-like_count')
+                       - models.Count(models.Case(models.When(evals__is_like=False, then=1)))) \
+            .order_by('-date', '-like_count')
 
     def get_by_tag(self, tag_name):
         return self.get_queryset().filter(tags__name=tag_name).order_by('-date')
@@ -28,7 +47,7 @@ class Question(models.Model):
                              on_delete=models.PROTECT)
 
     date = models.DateTimeField(auto_now_add=True)
-    title = models.TextField()
+    title = models.CharField()
     body = models.TextField()
     tags = models.ManyToManyField('Tag')
     objects = QuestionManager()
@@ -41,13 +60,19 @@ class Answer(models.Model):
     question = models.ForeignKey(Question,
                                  related_name='answers',
                                  on_delete=models.PROTECT)
-
+    date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
-    is_right = models.BooleanField()
+    is_right = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Tag(models.Model):
-    name = models.TextField(unique=True)
+    name = models.CharField(unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class QuestionRating(models.Model):

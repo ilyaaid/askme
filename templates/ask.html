@@ -2,32 +2,19 @@
 
 {% block content %}
 
-<div class="col-8">
+    {% load bootstrap5 %}
 
-    <div class="question-new">
-        <h1>New question</h1>
-        <form action="#" method="POST" class="question-creation">
-            <div class="warnings mb-2">
-                Invalid <span>tags</span>
-            </div>
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title"
-                       placeholder="Enter title">
-            </div>
-            <div class="mb-3">
-                <label for="text" class="form-label">Text</label>
-                <textarea class="form-control" id="text" rows="3" placeholder="Text of question"></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="tags" class="form-label">Tags</label>
-                <input type="text" class="form-control invalid-input" id="tags"
-                       placeholder="python, c++, ...">
-            </div>
-            <button type="submit" class="btn btn-success">Ask question</button>
-        </form>
+    <div class="col-8">
+
+        <div class="question-new">
+            <h1>New question</h1>
+            <form action="{% url 'ask' %}" method="POST" class="question-creation" novalidate>
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <button type="submit" class="btn btn-success">Ask question</button>
+            </form>
+        </div>
+
     </div>
-
-</div>
 
 {% endblock %}

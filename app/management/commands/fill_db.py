@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.contrib.auth.hashers import make_password
 from app.models import Profile, Question, Answer, Tag, QuestionRating, AnswerRating
 
 from random import choice, randint
@@ -17,16 +18,16 @@ def random_string(n):
 def fill_users(size):
     profiles = []
     usernames = set()
+    password = make_password('password')
     for i in range(size):
         username = random_string(5)
         if username in usernames:
             size += 1
             continue
         usernames.add(username)
-        password = 'password*' + username
 
         profiles.append(Profile(username=username, password=password,
-                                avatar='avatars/user' + str(i % 3) + '.jpg'))
+                                avatar='avatars/default' + str(i % 3) + '.jpg'))
 
     Profile.objects.bulk_create(profiles)
 
@@ -150,11 +151,11 @@ def fill_answer_evals(size):
 
 def fill_with_ratio(ratio):
     fill_users(ratio)
-    fill_tags(ratio)
-    fill_questions(ratio * 10)
-    fill_answers(ratio * 100)
-    fill_question_evals(ratio * 100)
-    fill_answer_evals(ratio * 100)
+    # fill_tags(ratio)
+    # fill_questions(ratio * 10)
+    # fill_answers(ratio * 100)
+    # fill_question_evals(ratio * 100)
+    # fill_answer_evals(ratio * 100)
 
 
 class Command(BaseCommand):

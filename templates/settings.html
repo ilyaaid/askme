@@ -1,35 +1,17 @@
 {% extends "inc/base.html" %}
+{% load bootstrap5 %}
 
 {% block content %}
 
     <div class="user-settings">
         <h1>Account settings</h1>
-        <form action="#" method="POST" class="question-creation">
-            <div class="warnings mb-2">
-                Invalid <span>email</span>
-            </div>
-            <div class="mb-3">
-                <label for="login" class="form-label">Login</label>
-                <input type="text" class="form-control" id="login" value="dr_pepper" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control invalid-input" id="email" value="dr.pepper@mail.ru" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" value="Dr.Pepper">
-            </div>
-
-            <div class="mb-5">
-                <label for="avatar" class="form-label">Upload Avatar</label>
-                <img class="d-block mb-3" src="../uploads/avatars/user1.jpg" alt="avatar" width="120px"
-                     height="120px">
-                <input type="file" class="form-control" id="avatar">
-            </div>
-
+        <form action="{% url 'settings' %}" method="POST"
+              enctype="multipart/form-data" class="question-creation" novalidate>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <img src="{{ request.user.avatar.url }}" alt="avatar"
+                                     class="header-user-avatar mb-4" width="100px"
+                                     height="100px">
             <button type="submit" class="btn btn-success">Save</button>
         </form>
     </div>

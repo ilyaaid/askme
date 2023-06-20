@@ -20,7 +20,7 @@
                     <a href="{% url 'question' question_id=question.id %}"
                        class="question-answers">answer({{ question.answers.count }})</a>
                 </div>
-                <div class="col-10">
+                <div class="col-6">
                     <div class="question-tags">Tags:
                         <div class="question-tags-list">
 
@@ -30,6 +30,9 @@
 
                         </div>
                     </div>
+                </div>
+                <div class="col-4">
+                    {{ question.date }}
                 </div>
             </div>
         </div>
