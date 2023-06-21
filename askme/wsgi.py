@@ -14,3 +14,14 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'askme.settings')
 
 application = get_wsgi_application()
+
+
+# GET параметры лежат в переменной QUERY_STRING
+# POST параметры лежат в переменной wsgi.input
+
+# def application(env, start_response):
+#     print()
+#     print(env['wsgi.input'])
+#     print('\t--------------------')
+#     start_response('200 OK', [('Content-Type', 'text/html')])
+#     return [b"Hello World"]

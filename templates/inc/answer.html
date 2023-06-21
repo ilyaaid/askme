@@ -1,12 +1,12 @@
 {% load static %}
 
-<div class="answer {% if answer.is_right %} correct-answer {% endif %}" >
+<div class="answer {% if answer.is_right %} correct-answer {% endif %}" id="answer-{{ answer.id }}">
     <div class="row">
         <div class="col-3">
             <img class="question-avatar" src="{{ answer.user.avatar.url }}" alt="avatar"
                  width="80px"
                  height="80px">
-            {% with answer.evals as evals %}
+            {% with object=answer object_type="answer" %}
                 {% include "inc/evals.html" %}
             {% endwith %}
         </div>
@@ -15,12 +15,14 @@
                 {{ answer.body }}
             </p>
             <div class="answer-mark">
-                <input type="checkbox" {% if answer.is_right %} checked {% endif %}>
+                <input class="answer-mark-input" type="checkbox" data-id="{{ answer.id }}"
+                        {% if answer.is_right %} checked {% endif %}
+                        {% if request.user != question.user %} disabled {% endif %}>
                 Correct!
             </div>
         </div>
         <div class="col-12" style="text-align: right">
-                {{ answer.date }}
+            {{ answer.date }}
         </div>
     </div>
 </div>

@@ -1,10 +1,21 @@
 {% load static %}
 {% load mine %}
 
-<div class="question-likes">
-    <button><img src="{% static "img/like.png" %}" alt="like" width="25px"
-                 height="25px"></button>
-    <div class="question-rating">{{ evals|count_rating }}</div>
-    <button><img src="{% static "img/dislike.png" %}" alt="dislike" width="25px"
-                 height="25px"></button>
+<div class="object-likes">
+    <button class="object-eval-btn"
+            data-object-type="{{ object_type }}" data-eval-value="+" data-id="{{ object.id }}"
+            {% if request.user.id == object.user.id %} disabled {% endif %}>
+        <img src="{% static "img/like.png" %}" alt="+" width="25px"
+             height="25px">
+    </button>
+    <div class="object-rating" id="{{ object_type }}-rating-{{ object.id }}">
+        {{ object.evals|count_rating }}
+    </div>
+    <button class="object-eval-btn"
+            data-object-type="{{ object_type }}" data-eval-value="-" data-id="{{ object.id }}"
+            {% if request.user.id == object.user.id %} disabled {% endif %}>
+        <img src="{% static "img/dislike.png" %}" alt="-" width="25px"
+             height="25px">
+    </button>
 </div>
+

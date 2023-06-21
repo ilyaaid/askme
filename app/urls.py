@@ -13,6 +13,9 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('signup', views.signup, name='signup'),
     path('logout', views.logout, name='logout'),
+    path('question_eval/', views.question_eval, name='question_eval'),
+    path('answer_eval/', views.answer_eval, name='answer_eval'),
+    path('answer_is_right/', views.answer_is_right, name='answer_is_right'),
 ]
 
 if settings.DEBUG:

@@ -35,7 +35,7 @@ class QuestionManager(models.Manager):
         return self.get_queryset().all().annotate(
             like_count=models.Count(models.Case(models.When(evals__is_like=True, then=1)))
                        - models.Count(models.Case(models.When(evals__is_like=False, then=1)))) \
-            .order_by('-date', '-like_count')
+            .order_by('-like_count', '-date')
 
     def get_by_tag(self, tag_name):
         return self.get_queryset().filter(tags__name=tag_name).order_by('-date')
@@ -52,6 +52,22 @@ class Question(models.Model):
     tags = models.ManyToManyField('Tag')
     objects = QuestionManager()
 
+    def __str__(self):
+        return self.title
+
+
+class AnswerManager(models.Manager):
+    def get_list(self, question):
+        return self.get_queryset().filter(question=question).order_by("-is_right", "date")
+
+    def get_page(self, answer, question, per_page):
+        answers = self.get_list(question)
+        page = 1
+        for i, item in enumerate(answers):
+            if item == answer:
+                page = i // per_page + 1
+                break
+        return page
 
 class Answer(models.Model):
     user = models.ForeignKey(Profile,
@@ -64,8 +80,13 @@ class Answer(models.Model):
     body = models.TextField()
     is_right = models.BooleanField(default=False)
 
+    objects = AnswerManager()
+
     class Meta:
         ordering = ['-id']
+
+    def __str__(self):
+        return self.body[:15]+"..."
 
 
 class Tag(models.Model):

@@ -122,22 +122,22 @@ body {
     margin: 0 auto 20px;
 }
 
-.question-likes {
+.object-likes {
     margin: 0 auto;
     display: flex;
     justify-content: center;
 }
 
-.question-likes button:hover {
+.object-likes button:hover {
     opacity: 0.6;
 }
 
-.question-likes button {
+.object-likes button {
     background-color: transparent;
     border: none;
 }
 
-.question-rating {
+.object-rating {
     padding: 0 10px;
     border: 1px solid black;
     border-radius: 2px;

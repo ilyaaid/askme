@@ -5,12 +5,15 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.forms import model_to_dict
+from django.http import JsonResponse
 
 from app import models
 from app import forms
 
+ITEMS_PRE_PAGE = 10
 
-def paginate(objects_list, request, per_page=10):
+
+def paginate(objects_list, request, per_page=ITEMS_PRE_PAGE):
     p = Paginator(objects_list, per_page)
     return p
 
@@ -42,6 +45,7 @@ def tag(request, tag_name):
     }
     return render(request, 'tag.html', context=context)
 
+
 @require_http_methods(['POST', 'GET'])
 def question(request, question_id: int):
     try:
@@ -56,14 +60,15 @@ def question(request, question_id: int):
         if form.is_valid():
             ans = form.save()
             if ans:
-                return redirect(request.path)
+                return redirect(request.path + "?page=" +
+                                str(models.Answer.objects.get_page(ans, q_obj, ITEMS_PRE_PAGE)) +
+                                "#answer-" + str(ans.id))
             else:
                 form.add_error(field=None, error="Error in submitting answer")
-                return redirect(request.path)
 
     context = {
         'question': q_obj,
-        'paginator': paginate(q_obj.answers.order_by("-date", "-is_right"), request),
+        'paginator': paginate(models.Answer.objects.get_list(q_obj), request),
         'form': form,
     }
     return render(request, 'question.html', context=context)
@@ -138,6 +143,7 @@ def settings(request):
         'form': form,
     })
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def ask(request):
@@ -153,4 +159,101 @@ def ask(request):
                 form.add_error(field=None, error="Error in question form!")
     return render(request, 'ask.html', {
         "form": form
+    })
+
+
+def get_question_cur_rating(question_id):
+    return models.QuestionRating.objects.filter(question_id=question_id, is_like=True).count() - \
+        models.QuestionRating.objects.filter(question_id=question_id, is_like=False).count()
+
+
+@login_required
+@require_http_methods(['POST'])
+def question_eval(request):
+    question_id = request.POST.get('question_id', None)
+    if not question_id:
+        return HttpResponseNotFound()
+
+    try:
+        eval = models.QuestionRating.objects.get(user=request.user, question_id=question_id)
+    except models.QuestionRating.DoesNotExist:
+        eval = None
+
+    if eval:
+        if eval.is_like and request.POST['eval_value'] == '+' or \
+                (not eval.is_like) and request.POST['eval_value'] == '-':
+            return JsonResponse({
+                "new_rating": get_question_cur_rating(question_id),
+                "question_id": question_id,
+            })
+        else:
+            eval.delete()
+
+    models.QuestionRating.objects.create(user=request.user, question_id=question_id,
+                                         is_like=(request.POST['eval_value'] == '+'))
+
+    return JsonResponse({
+        "new_rating": get_question_cur_rating(question_id),
+        "question_id": question_id,
+    })
+
+
+def get_answer_cur_rating(answer_id):
+    return models.AnswerRating.objects.filter(answer_id=answer_id, is_like=True).count() - \
+        models.AnswerRating.objects.filter(answer_id=answer_id, is_like=False).count()
+
+
+@login_required
+@require_http_methods(['POST'])
+def answer_eval(request):
+    answer_id = request.POST.get('answer_id', None)
+    if not answer_id:
+        return HttpResponseNotFound()
+
+    try:
+        eval = models.AnswerRating.objects.get(user=request.user, answer_id=answer_id)
+    except models.AnswerRating.DoesNotExist:
+        eval = None
+
+    if eval:
+        if eval.is_like and request.POST['eval_value'] == '+' or \
+                (not eval.is_like) and request.POST['eval_value'] == '-':
+            return JsonResponse({
+                "new_rating": get_answer_cur_rating(answer_id),
+                "answer_id": answer_id,
+            })
+        else:
+            eval.delete()
+
+    models.AnswerRating.objects.create(user=request.user, answer_id=answer_id,
+                                       is_like=(request.POST['eval_value'] == '+'))
+
+    return JsonResponse({
+        "new_rating": get_answer_cur_rating(answer_id),
+        "answer_id": answer_id,
+    })
+
+
+@login_required
+@require_http_methods(['POST'])
+def answer_is_right(request):
+    try:
+        answer = models.Answer.objects.get(id=request.POST["answer_id"])
+    except models.Answer.DoesNotExist:
+        answer = None
+    if not answer:
+        return HttpResponseNotFound()
+
+    if request.user != answer.question.user:
+        return JsonResponse({
+            "answer_id": request.POST["answer_id"],
+            "is_checked": answer.is_right,
+        })
+
+    answer.is_right = (request.POST["is_checked"] == "true")
+    answer.save()
+
+    return JsonResponse({
+        "answer_id": request.POST["answer_id"],
+        "is_checked": answer.is_right,
     })

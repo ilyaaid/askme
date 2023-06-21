@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static "css/style.css" %}">
     <link rel="icon" href="{% static 'img/favicon.png' %}">
     {% block styles_links %} {% endblock %}
+    <script src="{% static "js/jquery-3.7.0.min.js" %}"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -122,7 +123,7 @@
         <span class="text-muted">© 2023 Ilya Аleshin</span>
     </div>
 </footer>
-
+<script src="{% static "js/main.js" %}"></script>
 <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
 </body>
 </html>

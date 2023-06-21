@@ -16,7 +16,7 @@
                 <img class="question-avatar" src="{{ question.user.avatar.url }}" alt="avatar"
                      width="120px"
                      height="120px">
-                {% with question.evals as evals %}
+                {% with object=question object_type="question" %}
                     {% include "inc/evals.html" %}
                 {% endwith %}
             </div>
