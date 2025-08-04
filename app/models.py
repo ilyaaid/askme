@@ -15,7 +15,7 @@ def user_directory_path(instance, filename):
                                                      now.year, now.month, now.day)
 
 def get_default_image():
-    image = Image.open(settings.MEDIA_ROOT + '/avatars/default.png')
+    image = Image.open(settings.MEDIA_ROOT + '/default.png')
     bytes_io = BytesIO()
     image.save(bytes_io, format='PNG')
     file = InMemoryUploadedFile(bytes_io, None, 'default.png', 'image/png', bytes_io.getbuffer().nbytes, None)

@@ -150,9 +150,9 @@ def fill_answer_evals(size):
 
 
 def fill_with_ratio(ratio):
-    # fill_users(ratio)
-    # fill_tags(ratio)
-    # fill_questions(ratio * 10)
+    fill_users(ratio)
+    fill_tags(ratio)
+    fill_questions(ratio * 10)
     fill_answers(ratio * 100)
     fill_question_evals(ratio * 100)
     fill_answer_evals(ratio * 100)

@@ -1,7 +1,4 @@
 .idea/
 venv/
-*.pyc
-
-
-DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
+__pycache__/
+uploads/avatars/*
